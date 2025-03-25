@@ -105,6 +105,14 @@ public class ${name}Renderer extends <#if humanoid>Humanoid</#if>MobRenderer<${n
 				new HumanoidModel(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getModelManager()));
 		</#if>
 
+		<#if data.mobModelName == "Villager" >
+		this.addLayer(new CrossedArmsItemLayer<>(this,context.getItemInHandRenderer()));
+		</#if>
+		
+		<#if data.mobModelName == "Witch" >
+		this.addLayer(new CrossedArmsItemLayer<>(this,context.getItemInHandRenderer()));
+		</#if>
+
 		<#list data.modelLayers as layer>
 		this.addLayer(new RenderLayer<${name}Entity, ${model}>(this) {
 			final ResourceLocation LAYER_TEXTURE = new ResourceLocation("${modid}:textures/entities/${layer.texture}");

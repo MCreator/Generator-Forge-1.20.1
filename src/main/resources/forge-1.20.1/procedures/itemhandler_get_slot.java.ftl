@@ -1,10 +1,3 @@
 <#include "mcitems.ftl">
-/*@ItemStack*/(new Object(){
-	public ItemStack getItemStack(int sltid, ItemStack _isc) {
-		AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-		_isc.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(capability -> {
-			_retval.set(capability.getStackInSlot(sltid).copy());
-		});
-		return _retval.get();
-	}
-}.getItemStack(${opt.toInt(input$slotid)}, ${mappedMCItemToItemStackCode(input$item, 1)}))
+<@addTemplate file="utils/itemhandler_get_slot.java.ftl"/>
+/*@ItemStack*/(getItemStackFromItemStackSlot(${opt.toInt(input$slotid)}, ${mappedMCItemToItemStackCode(input$item, 1)}))

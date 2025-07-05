@@ -28,8 +28,13 @@
           "entries": [
             <#list pool.entries as entry>
               {
+                <#assign item = mappedMCItemToRegistryName(entry.item)>
+                <#if entry.item.isAir() || item == "minecraft:air">
+                "type": "minecraft:empty",
+                <#else>
                 "type": "minecraft:${entry.type}",
-                "name": "${mappedMCItemToRegistryName(entry.item)}",
+                "name": "${item}",
+                </#if>
                 "weight": ${entry.weight},
                 <#if entry.silkTouchMode == 1 && hasToolContext()>
                 "conditions": [
@@ -102,8 +107,7 @@
                 <#if entry?has_next>,</#if>
             </#list>
           ]
-        }
-        <#if pool?has_next>,</#if>
+        }<#if pool?has_next>,</#if>
     </#list>
   ],
   "random_sequence": "${data.getNamespace()}:${data.getName()}"

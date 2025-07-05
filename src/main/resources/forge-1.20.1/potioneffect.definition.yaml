@@ -10,4 +10,4 @@ localizationkeys:
   - key: effect.@modid.@registryname
     mapto: effectName
 
-field_exclusions: [onMobHurt, onMobRemoved, onAddedSound, particle]
+field_exclusions: [particle]

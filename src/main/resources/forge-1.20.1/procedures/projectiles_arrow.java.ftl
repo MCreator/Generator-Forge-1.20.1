@@ -1,17 +1,16 @@
-<#assign projectile = generator.map(field$projectile, "projectiles", 1)>
-<#assign hasShooter = (input$shooter != "null")>
-<#assign isPiercing = (input$piercing != "/*@int*/0")>
-new Object() {
-	public Projectile getArrow(Level level<#if hasShooter>, Entity shooter</#if>, float damage, int knockback<#if isPiercing>, byte piercing</#if>) {
-		AbstractArrow entityToSpawn = new ${generator.map(field$projectile, "projectiles", 0)}(${projectile}, level);
-		<#if hasShooter>entityToSpawn.setOwner(shooter);</#if>
-		entityToSpawn.setBaseDamage(damage);
-		entityToSpawn.setKnockback(knockback);
-		<#if field$projectile?starts_with("CUSTOM:")>entityToSpawn.setSilent(true);</#if>
-		<#if isPiercing>entityToSpawn.setPierceLevel(piercing);</#if>
-		<#if field$fire == "TRUE">entityToSpawn.setSecondsOnFire(100);</#if>
-		<#if field$particles == "TRUE">entityToSpawn.setCritArrow(true);</#if>
-		<#if field$pickup != "DISALLOWED">entityToSpawn.pickup = AbstractArrow.Pickup.${field$pickup};</#if>
-		return entityToSpawn;
-	}
-}.getArrow(projectileLevel<#if hasShooter>, ${input$shooter}</#if>, ${opt.toFloat(input$damage)}, ${opt.toInt(input$knockback)}<#if isPiercing>, (byte) ${input$piercing}</#if>)
+<@addTemplate file="utils/projectiles/arrow.java.ftl"/>
+<#if (input$knockback == "/*@int*/0") && (input$piercing == "/*@int*/0")>
+	initArrowProjectile(new ${generator.map(field$projectile, "projectiles", 0)}(${generator.map(field$projectile, "projectiles", 1)}, projectileLevel),
+		${input$shooter}, ${opt.toFloat(input$damage)}, ${field$projectile?starts_with("CUSTOM:")}, ${field$fire == "TRUE"}, ${field$particles == "TRUE"},
+		AbstractArrow.Pickup.${field$pickup})
+<#elseif field$projectile?starts_with("CUSTOM:")>
+	<@addTemplate file="utils/projectiles/arrow_weapon.java.ftl"/>
+	initArrowProjectile(createArrowWeaponItemStack(new ${generator.map(field$projectile, "projectiles", 0)}(${generator.map(field$projectile, "projectiles", 1)}, 0, 0, 0, projectileLevel),
+		${opt.toInt(input$knockback)}, (byte) ${input$piercing}), ${input$shooter}, ${opt.toFloat(input$damage)},
+		true, ${field$fire == "TRUE"}, ${field$particles == "TRUE"}, AbstractArrow.Pickup.${field$pickup})
+<#else>
+	<@addTemplate file="utils/projectiles/arrow_weapon.java.ftl"/>
+	initArrowProjectile(createArrowWeaponItemStack(new ${generator.map(field$projectile, "projectiles", 0)}(projectileLevel, 0, 0, 0),
+		${opt.toInt(input$knockback)}, (byte) ${input$piercing}), ${input$shooter}, ${opt.toFloat(input$damage)},
+		false, ${field$fire == "TRUE"}, ${field$particles == "TRUE"}, AbstractArrow.Pickup.${field$pickup})
+</#if>

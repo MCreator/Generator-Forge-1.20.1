@@ -5,66 +5,66 @@
     "gui_light": "front",
     "base": { <@modelDefinition/> },
     "perspectives": {
-      "gui": {
-        "parent": "item/generated",
-        "textures": {
-          "layer0": "${guiTexture.format("%s:item/%s")}"
+        "gui": {
+            "parent": "item/generated",
+            "textures": {
+                "layer0": "${guiTexture.format("%s:item/%s")}"
+            }
+        },
+        "fixed": {
+            "parent": "item/generated",
+            "textures": {
+                "layer0": "${guiTexture.format("%s:item/%s")}"
+            }
+        },
+        "ground": {
+            "parent": "item/generated",
+            "textures": {
+                "layer0": "${guiTexture.format("%s:item/%s")}"
+            }
         }
-      },
-      "fixed": {
-        "parent": "item/generated",
-        "textures": {
-          "layer0": "${guiTexture.format("%s:item/%s")}"
-        }
-      },
-      "ground": {
-        "parent": "item/generated",
-        "textures": {
-          "layer0": "${guiTexture.format("%s:item/%s")}"
-        }
-      }
     }
     <#else>
-        <@modelDefinition/>
+    <@modelDefinition/>
     </#if>
     <#macro modelDefinition>
-        <#if data.blockingRenderType == 0>
+    <#if data.blockingRenderType == 0>
     "parent": "item/handheld",
     "textures": {
-      "layer0": "${data.texture.format("%s:item/%s")}"
+        "layer0": "${data.texture.format("%s:item/%s")}"
     },
     "display": {
-      "thirdperson_righthand": {
-        "rotation": [ 45, -35, 0 ]
-      },
-      "thirdperson_lefthand": {
-        "rotation": [ 45, -35, 0 ]
-      },
-      "firstperson_righthand": {
-        "rotation": [ 0, 0, 5 ],
-        "translation": [ -5, 2, -1 ]
-      },
-      "firstperson_lefthand": {
-        "rotation": [ 0, 0, 5 ],
-        "translation": [ -5, 2, -1 ]
-      }
+        "thirdperson_righthand": {
+            "rotation": [ 45, -35, 0 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 45, -35, 0 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, 0, 5 ],
+            "translation": [ -5, 2, -1 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 0, 5 ],
+            "translation": [ -5, 2, -1 ]
+        }
     }
-        <#elseif data.blockingRenderType == 1>
+    <#elseif data.blockingRenderType == 1>
     "parent": "${modid}:custom/${data.blockingModelName.split(":")[0]}",
     "textures": {
         <@textures data.getBlockingTextureMap()/>
-      "particle": "${data.texture.format("%s:item/%s")}"
+        "particle": "${data.texture.format("%s:item/%s")}"
     }
-        <#elseif data.blockingRenderType == 2>
+    <#elseif data.blockingRenderType == 2>
     "forge_marker": 1,
     "parent": "forge:item/default",
     "loader": "forge:obj",
     "model": "${modid}:models/item/${data.blockingModelName.split(":")[0]}.obj",
     "textures": {
         <@textures data.getBlockingTextureMap()/>
-      "particle": "${data.texture.format("%s:item/%s")}"
+        "particle": "${data.texture.format("%s:item/%s")}"
     }
-        </#if>
+    </#if>
     </#macro>
 }
 

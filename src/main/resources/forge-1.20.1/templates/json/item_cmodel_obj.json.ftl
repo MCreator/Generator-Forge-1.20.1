@@ -5,57 +5,57 @@
     "gui_light": "front",
     "base": { <@modelDefinition/> },
     "perspectives": {
-      "gui": {
-        "parent": "item/generated",
-        "textures": {
-          "layer0": "${guiTexture.format("%s:item/%s")}"
+        "gui": {
+            "parent": "item/generated",
+            "textures": {
+                "layer0": "${guiTexture.format("%s:item/%s")}"
+            }
+        },
+        "fixed": {
+            "parent": "item/generated",
+            "textures": {
+                "layer0": "${guiTexture.format("%s:item/%s")}"
+            }
+        },
+        "ground": {
+            "parent": "item/generated",
+            "textures": {
+                "layer0": "${guiTexture.format("%s:item/%s")}"
+            }
         }
-      },
-      "fixed": {
-        "parent": "item/generated",
-        "textures": {
-          "layer0": "${guiTexture.format("%s:item/%s")}"
-        }
-      },
-      "ground": {
-        "parent": "item/generated",
-        "textures": {
-          "layer0": "${guiTexture.format("%s:item/%s")}"
-        }
-      }
     }
     <#else>
-        <@modelDefinition/>
+    <@modelDefinition/>
     </#if>
     <#macro modelDefinition>
     "forge_marker": 1,
     "parent": "forge:item/default",
     "loader": "forge:obj",
-        <#if var_item??> <#-- used by armor where item type is specified (helmet, body, ...) -->
+    <#if var_item??> <#-- used by armor where item type is specified (helmet, body, ...) -->
     "model": "${modid}:models/item/${data.getItemCustomModelNameFor(var_item)}.obj",
     "textures": {
         <@textures data.getItemModelTextureMap(var_item)/>
-      "particle": "${data.getItemTextureFor(var_item).format("%s:item/%s")}"
+        "particle": "${data.getItemTextureFor(var_item).format("%s:item/%s")}"
     }
-        <#else>
+    <#else>
     "model": "${modid}:models/item/${data.customModelName.split(":")[0]}.obj",
     "textures": {
         <@textures data.getTextureMap()/>
-      "particle": "${data.texture.format("%s:item/%s")}"
+        "particle": "${data.texture.format("%s:item/%s")}"
     }
-        </#if>
+    </#if>
     </#macro>
     <#if data.getModels?? && data.getModels()?has_content>,
     "overrides": [
         <#list data.getModels() as model>
         {
-          "predicate": {
+            "predicate": {
                 <#list model.stateMap.keySet() as property>
                     <#assign value = model.stateMap.get(property)>
                     "${generator.map(property.getPrefixedName(registryname + "_"), "itemproperties")}": ${value?is_boolean?then(value?then("1", "0"), value)}<#sep>,
                 </#list>
-          },
-          "model": "${modid}:item/${registryname}_${model?index}"
+            },
+            "model": "${modid}:item/${registryname}_${model?index}"
         }<#sep>,
         </#list>
     ]

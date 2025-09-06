@@ -60,9 +60,11 @@ package ${package}.item.inventory;
 	private ItemStackHandler createItemHandler() {
 		return new ItemStackHandler(${data.inventorySize}) {
 
+            <#if data.inventoryStackSize != 99>
 			@Override public int getSlotLimit(int slot) {
 				return ${data.inventoryStackSize};
 			}
+            </#if>
 
 			@Override public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
 				return stack.getItem() != ${JavaModName}Items.${REGISTRYNAME}.get();

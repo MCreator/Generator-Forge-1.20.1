@@ -90,23 +90,19 @@ public class ${name}PortalBlock extends NetherPortalBlock {
 		<#if data.portalSound.toString()?has_content>
 		if (random.nextInt(110) == 0)
 			world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-					ForgeRegistries.SOUND_EVENTS
-							.getValue(ResourceLocation.parse("${data.portalSound}")), SoundSource.BLOCKS, 0.5f,
+					ForgeRegistries.SOUND_EVENTS.getValue(ResourceLocation.parse("${data.portalSound}")), SoundSource.BLOCKS, 0.5f,
 					random.nextFloat() * 0.4f + 0.8f);
         </#if>
 	}
 
 	@Override public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-		<#if hasProcedure(data.portalUseCondition)>
-			if (<@procedureCode data.portalUseCondition, {
-				"x": "pos.getX()",
-				"y": "pos.getY()",
-				"z": "pos.getZ()",
-				"entity": "entity",
-				"world": "world"
-			}, false/>)
-		</#if>
-		if (entity.canChangeDimensions() && !entity.level().isClientSide()) {
+		if (<#if hasProcedure(data.portalUseCondition)><@procedureCode data.portalUseCondition, {
+        		"x": "pos.getX()",
+        		"y": "pos.getY()",
+        		"z": "pos.getZ()",
+        		"entity": "entity",
+        		"world": "world"
+        		}, false/> && </#if>entity.canChangeDimensions() && !entity.level().isClientSide()) {
 			if (entity.isOnPortalCooldown()) {
 				entity.setPortalCooldown();
 			} else if (entity.level().dimension() != ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse("${modid}:${registryname}"))) {

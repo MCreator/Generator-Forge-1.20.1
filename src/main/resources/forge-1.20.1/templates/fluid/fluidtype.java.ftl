@@ -61,7 +61,8 @@ public class ${name}FluidType extends FluidType {
 			<#else>
 			.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
 			</#if>
-			.sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH));
+			.sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
+		);
 	}
 
 	@Override public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {

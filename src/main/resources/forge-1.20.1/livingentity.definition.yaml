@@ -22,6 +22,12 @@ tags:
   - tag: ENTITIES:minecraft:raiders
     condition: "${data.mobBehaviourType == 'Raider'}"
 
+  - tag: GAME_EVENTS:minecraft:@registryname_can_listen
+    condition:
+      - sensitiveToVibration
+      - "${data.vibrationalEvents?has_content}"
+    entryprovider: data.getVibrationalEvents()
+
 localizationkeys:
   - key: item.@modid.@registryname_spawn_egg
     mapto: mobName
@@ -29,5 +35,3 @@ localizationkeys:
     condition: hasSpawnEgg
   - key: entity.@modid.@registryname
     mapto: mobName
-
-field_exclusions: [sensitiveToVibration, vibrationalEvents, vibrationSensitivityRadius, canReceiveVibrationCondition, onReceivedVibration]

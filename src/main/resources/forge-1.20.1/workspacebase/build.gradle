@@ -1,6 +1,6 @@
 plugins {
     id 'eclipse'
-    id 'net.neoforged.moddev.legacyforge' version '2.0.99'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.103'
 }
 
 version = '1.0'
@@ -41,6 +41,26 @@ legacyForge {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+mixin {
+    if (file("src/main/resources/${modid}.mixins.json").exists()) {
+        add sourceSets.main, "${modid}.refmap.json"
+        config "${modid}.mixins.json"
+    }
+}
+
+dependencies {
+    implementation(jarJar("io.github.llamalad7:mixinextras-neoforge:0.5.0"))
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+jar {
+    if (file("src/main/resources/${modid}.mixins.json").exists()) {
+        manifest.attributes([
+                "MixinConfigs": "${modid}.mixins.json"
+        ])
+    }
 }
 
 apply from: 'mcreator.gradle'

@@ -1,13 +1,3 @@
 <#include "mcelements.ftl">
-<#-- @formatter:off -->
-/*@int*/(new Object(){
-	public int getEnergyStored(LevelAccessor level, BlockPos pos) {
-		AtomicInteger _retval = new AtomicInteger(0);
-		BlockEntity _ent = level.getBlockEntity(pos);
-		if (_ent != null)
-			_ent.getCapability(ForgeCapabilities.ENERGY, ${input$direction}).ifPresent(capability ->
-				_retval.set(capability.getEnergyStored()));
-		return _retval.get();
-	}
-}.getEnergyStored(world, ${toBlockPos(input$x,input$y,input$z)}))
-<#-- @formatter:on -->
+<@addTemplate file="utils/energy/block_energy_get.java.ftl"/>
+/*@int*/(getEnergyStored(world, ${toBlockPos(input$x,input$y,input$z)}, ${input$direction}))

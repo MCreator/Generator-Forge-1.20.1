@@ -1,0 +1,58 @@
+global_templates:
+  - template: elementinits/banner_patterns.java.ftl
+    writer: java
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameBannerPatterns.java"
+  - template: bannerpattern/banner_pattern_tag.json.ftl
+    writer: json
+    condition: "${w.getGElementsOfType('bannerpattern')?filter(e -> !e.requireItem)?size != 0}"
+    name: "@RESROOT/data/minecraft/tags/banner_pattern/no_item_required.json"
+
+localizationkeys:
+  - key: block.minecraft.banner.@modid.@registryname.white
+    mapto: name
+    prefix: "White "
+  - key: block.minecraft.banner.@modid.@registryname.orange
+    mapto: name
+    prefix: "Orange "
+  - key: block.minecraft.banner.@modid.@registryname.magenta
+    mapto: name
+    prefix: "Magenta "
+  - key: block.minecraft.banner.@modid.@registryname.light_blue
+    mapto: name
+    prefix: "Light Blue "
+  - key: block.minecraft.banner.@modid.@registryname.yellow
+    mapto: name
+    prefix: "Yellow "
+  - key: block.minecraft.banner.@modid.@registryname.lime
+    mapto: name
+    prefix: "Lime "
+  - key: block.minecraft.banner.@modid.@registryname.pink
+    mapto: name
+    prefix: "Pink "
+  - key: block.minecraft.banner.@modid.@registryname.gray
+    mapto: name
+    prefix: "Gray "
+  - key: block.minecraft.banner.@modid.@registryname.light_gray
+    mapto: name
+    prefix: "Light Gray "
+  - key: block.minecraft.banner.@modid.@registryname.cyan
+    mapto: name
+    prefix: "Cyan "
+  - key: block.minecraft.banner.@modid.@registryname.purple
+    mapto: name
+    prefix: "Purple "
+  - key: block.minecraft.banner.@modid.@registryname.blue
+    mapto: name
+    prefix: "Blue "
+  - key: block.minecraft.banner.@modid.@registryname.brown
+    mapto: name
+    prefix: "Brown "
+  - key: block.minecraft.banner.@modid.@registryname.green
+    mapto: name
+    prefix: "Green "
+  - key: block.minecraft.banner.@modid.@registryname.red
+    mapto: name
+    prefix: "Red "
+  - key: block.minecraft.banner.@modid.@registryname.black
+    mapto: name
+    prefix: "Black "

@@ -66,17 +66,7 @@ package ${package}.network;
 
 	public static void handler(${name}SlotMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> {
-			Player entity = context.getSender();
-			int slotID = message.slotID;
-			int changeType = message.changeType;
-			int meta = message.meta;
-			int x = message.x;
-			int y = message.y;
-			int z = message.z;
-
-			handleSlotAction(entity, slotID, changeType, meta, x, y, z);
-		});
+		context.enqueueWork(() -> handleSlotAction(context.getSender(), message.slotID, message.changeType, message.meta, message.x, message.y, message.z));
 		context.setPacketHandled(true);
 	}
 

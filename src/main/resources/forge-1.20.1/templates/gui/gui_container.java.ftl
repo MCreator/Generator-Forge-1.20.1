@@ -46,7 +46,7 @@ public class ${name}Menu extends AbstractContainerMenu implements ${JavaModName}
 
 	public final Map<String, Object> menuState = new HashMap<>() {
 		@Override public Object put(String key, Object value) {
-		<#-- Prevent arbitrary data storage beyond the menu state -->
+			<#-- Prevent arbitrary data storage beyond the menu state -->
 			if (!this.containsKey(key) && this.size() >= ${data.components?size}) return null;
 			return super.put(key, value);
 		}
@@ -224,13 +224,15 @@ public class ${name}Menu extends AbstractContainerMenu implements ${JavaModName}
 					return ItemStack.EMPTY;
 				}
 
-				if (itemstack1.getCount() == 0)
-					slot.set(ItemStack.EMPTY);
-				else
+				if (itemstack1.isEmpty()) {
+					slot.setByPlayer(ItemStack.EMPTY);
+				} else {
 					slot.setChanged();
+				}
 
-				if (itemstack1.getCount() == itemstack.getCount())
+				if (itemstack1.getCount() == itemstack.getCount()) {
 					return ItemStack.EMPTY;
+				}
 
 				slot.onTake(playerIn, itemstack1);
 			}

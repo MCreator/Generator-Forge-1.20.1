@@ -80,7 +80,7 @@ public class ${name}Block extends ${getPlantClass(data.plantType)}Block
 				() -> ForgeRegistries.SOUND_EVENTS.getValue(ResourceLocation.parse("${data.hitSound}")),
 				() -> ForgeRegistries.SOUND_EVENTS.getValue(ResourceLocation.parse("${data.fallSound}"))
 			))
-		<#else>
+		<#elseif data.soundOnStep != "STONE">
 			.sound(SoundType.${data.soundOnStep})
 		</#if>
 		<#if data.unbreakable>
@@ -116,7 +116,13 @@ public class ${name}Block extends ${getPlantClass(data.plantType)}Block
 		<#if data.ignitedByLava>
 		.ignitedByLava()
 		</#if>
-		.offsetType(BlockBehaviour.OffsetType.${data.offsetType}).pushReaction(PushReaction.DESTROY)
+		<#if data.ignitedByLava>
+			.ignitedByLava()
+		</#if>
+		<#if data.offsetType != "NONE">
+			.offsetType(BlockBehaviour.OffsetType.${data.offsetType})
+		</#if>
+		.pushReaction(PushReaction.DESTROY)
 		);
 
 		<#if data.isWaterloggable()>
@@ -327,7 +333,7 @@ public class ${name}Block extends ${getPlantClass(data.plantType)}Block
 	@Override public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
 		super.triggerEvent(state, world, pos, eventID, eventParam);
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		return blockEntity == null ? false : blockEntity.triggerEvent(eventID, eventParam);
+		return blockEntity != null && blockEntity.triggerEvent(eventID, eventParam);
 	}
 	</#if>
 

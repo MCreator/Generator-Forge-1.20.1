@@ -114,7 +114,7 @@ public class ${name}Block extends
 				() -> ForgeRegistries.SOUND_EVENTS.getValue(ResourceLocation.parse("${data.hitSound}")),
 				() -> ForgeRegistries.SOUND_EVENTS.getValue(ResourceLocation.parse("${data.fallSound}"))
 			))
-		<#else>
+		<#elseif data.soundOnStep != "STONE">
 			.sound(SoundType.${data.soundOnStep})
 		</#if>
 		<#if data.unbreakable>
@@ -162,6 +162,9 @@ public class ${name}Block extends
 		<#if (!data.isNotColidable && data.offsetType != "NONE")>
 			.dynamicShape()
 		</#if>
+		<#if data.isReplaceable>
+			.replaceable()
+		</#if>
 		<#if data.offsetType != "NONE">
 			.offsetType(Block.OffsetType.${data.offsetType})
 		</#if>
@@ -190,12 +193,10 @@ public class ${name}Block extends
 		<#if data.blockBase?has_content>
 			<#if data.blockBase == "Stairs">
 				super(() -> Blocks.AIR.defaultBlockState(), <@blockProperties/>);
-			<#elseif data.blockBase == "PressurePlate">
-			    super(Sensitivity.<#if data.blockSetType == "OAK">EVERYTHING<#else>MOBS</#if>, <@blockProperties/>, BlockSetType.${data.blockSetType});
+			<#elseif data.blockBase == "PressurePlate" || data.blockBase == "TrapDoor" || data.blockBase == "Door">
+				super(<#if data.blockBase == "PressurePlate">Sensitivity.<#if data.blockSetType == "OAK">EVERYTHING<#else>MOBS</#if>, </#if><@blockProperties/>, BlockSetType.${data.blockSetType});
 			<#elseif data.blockBase == "Button">
-			    super(<@blockProperties/>, BlockSetType.${data.blockSetType}, <#if data.blockSetType == "OAK">30, true<#else>20, false</#if>);
-			<#elseif (data.blockBase == "TrapDoor" || data.blockBase == "Door")>
-				super(<@blockProperties/>, BlockSetType.${data.blockSetType});
+				super(<@blockProperties/>, BlockSetType.${data.blockSetType}, <#if data.blockSetType == "OAK">30, true<#else>20, false</#if>);
 			<#elseif data.blockBase == "FenceGate">
 				super(<@blockProperties/>, WoodType.OAK);
 			<#else>
@@ -389,14 +390,7 @@ public class ${name}Block extends
 		}
 		<#else>
 		@Override public BlockState rotate(BlockState state, Rotation rot) {
-			if(rot == Rotation.CLOCKWISE_90 || rot == Rotation.COUNTERCLOCKWISE_90) {
-				if (state.getValue(AXIS) == Direction.Axis.X) {
-					return state.setValue(AXIS, Direction.Axis.Z);
-				} else if (state.getValue(AXIS) == Direction.Axis.Z) {
-					return state.setValue(AXIS, Direction.Axis.X);
-				}
-			}
-			return state;
+			return RotatedPillarBlock.rotatePillar(state, rot);
 		}
 		</#if>
 
@@ -444,12 +438,6 @@ public class ${name}Block extends
 	<#if data.enchantPowerBonus != 0>
 	@Override public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
 		return ${data.enchantPowerBonus}f;
-	}
-	</#if>
-
-	<#if data.isReplaceable>
-	@Override public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-		return context.getItemInHand().getItem() != this.asItem();
 	}
 	</#if>
 
@@ -506,12 +494,6 @@ public class ${name}Block extends
 	}
 	</#if>
 
-	<#if data.isLadder>
-	@Override public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
-		return true;
-	}
-	</#if>
-
 	<#if data.canRedstoneConnect>
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
@@ -552,16 +534,7 @@ public class ${name}Block extends
 	}
 	</#if>
 
-	<#if hasProcedure(data.onRandomUpdateEvent)>
-	@OnlyIn(Dist.CLIENT) @Override public void animateTick(BlockState blockstate, Level world, BlockPos pos, RandomSource random) {
-		super.animateTick(blockstate, world, pos, random);
-		Player entity = Minecraft.getInstance().player;
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
-		<@procedureOBJToCode data.onRandomUpdateEvent/>
-	}
-	</#if>
+	<@onAnimateTick data.onRandomUpdateEvent/>
 
 	<@onDestroyedByPlayer data.onDestroyedByPlayer/>
 
@@ -635,7 +608,7 @@ public class ${name}Block extends
 		public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
 			super.triggerEvent(state, world, pos, eventID, eventParam);
 			BlockEntity blockEntity = world.getBlockEntity(pos);
-			return blockEntity == null ? false : blockEntity.triggerEvent(eventID, eventParam);
+			return blockEntity != null && blockEntity.triggerEvent(eventID, eventParam);
 		}
 
 	    <#if data.inventoryDropWhenDestroyed>
@@ -665,6 +638,18 @@ public class ${name}Block extends
 				return 0;
 		}
 	    </#if>
+	</#if>
+
+	<#if data.sensitiveToVibration && data.hasInventory>
+	@Override @Nullable public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+		if (!level.isClientSide && blockEntityType == ${JavaModName}BlockEntities.${REGISTRYNAME}.get()) {
+			return (_level, pos, state, blockEntity) -> {
+				if (blockEntity instanceof ${name}BlockEntity be)
+					VibrationSystem.Ticker.tick(_level, be.getVibrationData(), be.getVibrationUser());
+			};
+		}
+		return null;
+	}
 	</#if>
 
 	<#if data.tintType != "No tint">
